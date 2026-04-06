@@ -20,10 +20,12 @@ function parentFolder(segments: string[]): string | undefined {
   return segments[segments.length - 2]?.toLowerCase();
 }
 
+type FileKind = "bin" | "label" | "calib" | "image";
+
 export function classifyKittiFile(
   webkitRelativePath: string,
   fileName: string
-): { kind: keyof FrameBundle; id: string } | null {
+): { kind: FileKind; id: string } | null {
   const segs = webkitRelativePath.replace(/\\/g, "/").split("/").filter(Boolean);
   const stem = basenameStem(fileName);
   if (!NUMERIC_ID.test(stem)) return null;

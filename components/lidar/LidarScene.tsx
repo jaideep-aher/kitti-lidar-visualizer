@@ -42,6 +42,8 @@ export function LidarScene({
     prevRefitKey.current = refitKey;
     const dist = Math.max(radius * 3.2, 14);
     if (camera instanceof THREE.PerspectiveCamera) {
+      /* R3F’s default camera is a live Three.js object; refit updates it in place. */
+      /* eslint-disable react-hooks/immutability -- PerspectiveCamera is mutated by design */
       camera.position.set(
         center.x + dist * 0.72,
         center.y + dist * 0.42,
@@ -50,6 +52,7 @@ export function LidarScene({
       camera.near = Math.max(0.05, dist / 400);
       camera.far = Math.max(600, dist * 30);
       camera.updateProjectionMatrix();
+      /* eslint-enable react-hooks/immutability */
     }
     const id = requestAnimationFrame(() => {
       const o = ctrl.current;
