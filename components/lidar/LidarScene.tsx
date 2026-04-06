@@ -18,9 +18,10 @@ type Props = {
   calib: KittiCalib | null;
   labels: KittiLabel3D[];
   colorMode: ColorMode;
+  refitKey: number;
 };
 
-export function LidarScene({ cloud, calib, labels, colorMode }: Props) {
+export function LidarScene({ cloud, calib, labels, colorMode, refitKey }: Props) {
   const { center, radius } = useMemo(
     () => boundingSphereFromCloud(cloud),
     [cloud]
@@ -40,7 +41,7 @@ export function LidarScene({ cloud, calib, labels, colorMode }: Props) {
       camera.far = Math.max(600, dist * 30);
       camera.updateProjectionMatrix();
     }
-  }, [camera, center, radius]);
+  }, [camera, center, radius, refitKey]);
 
   /** OrbitControls ref is set after the first layout pass; sync target on the next frame. */
   useEffect(() => {
@@ -51,7 +52,7 @@ export function LidarScene({ cloud, calib, labels, colorMode }: Props) {
       o.update();
     });
     return () => cancelAnimationFrame(id);
-  }, [center, radius]);
+  }, [center, radius, refitKey]);
 
   return (
     <>
