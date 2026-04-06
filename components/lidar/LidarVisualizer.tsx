@@ -367,14 +367,28 @@ export function LidarVisualizer() {
               </button>
             ) : null}
           </div>
-          <p className="max-w-xl text-[12px] leading-relaxed text-muted">
-            For sequences, choose the <code className="text-foreground">training</code> directory
-            (or parent) so paths include{" "}
-            <code className="text-foreground">velodyne/</code>,{" "}
-            <code className="text-foreground">calib/</code>,{" "}
-            <code className="text-foreground">label_2/</code>, and optionally{" "}
-            <code className="text-foreground">image_2/</code>. Keys: ← → scrub, space play/pause.
-          </p>
+          <div className="max-w-xl space-y-2 text-[12px] leading-relaxed text-muted">
+            <p>
+              <span className="font-medium text-foreground">Single scan:</span> use the file inputs
+              on the right—good for one-off <code className="text-foreground">.bin</code> files.
+            </p>
+            <p>
+              <span className="font-medium text-foreground">Sequence:</span>{" "}
+              <strong className="font-medium text-foreground">Load KITTI training folder</strong>{" "}
+              and pick your <code className="text-foreground">training</code> folder (or a parent
+              whose paths still contain{" "}
+              <code className="text-foreground">velodyne/</code>,{" "}
+              <code className="text-foreground">calib/</code>,{" "}
+              <code className="text-foreground">label_2/</code>, optional{" "}
+              <code className="text-foreground">image_2/</code>). You can scrub or play through
+              frames to see motion and, with camera files, compare 2D and LiDAR for the same id.
+            </p>
+            <p className="text-[11px]">
+              Keys when a sequence is loaded: ← → step, space play/pause (not in text fields).{" "}
+              <strong className="font-medium text-foreground">Recenter camera</strong> refits the 3D
+              view; scrubbing keeps your angle so you can compare neighbors.
+            </p>
+          </div>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
           <label className="flex flex-col gap-1 text-xs text-muted">
