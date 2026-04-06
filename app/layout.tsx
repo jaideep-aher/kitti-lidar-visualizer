@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s · KITTI LiDAR visualizer",
   },
   description:
-    "Velodyne point cloud viewer in the browser: KITTI .bin, intensity and distance coloring, 3D boxes from labels with calib.",
+    "Inspect KITTI-style Velodyne .bin scans in the browser: single-frame or full training-folder sequences, optional camera (image_2), distance/intensity coloring, and 3D label boxes with calib.",
 };
 
 export default function RootLayout({
@@ -33,6 +33,19 @@ export default function RootLayout({
           </div>
         </header>
         {children}
+        <footer className="border-t border-border py-8 text-center">
+          <p className="text-sm text-muted">
+            Built by{" "}
+            <a
+              href="https://aher.dev"
+              className="font-medium text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              aher.dev
+            </a>
+          </p>
+        </footer>
       </body>
     </html>
   );
