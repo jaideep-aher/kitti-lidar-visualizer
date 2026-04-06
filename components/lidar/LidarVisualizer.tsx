@@ -61,19 +61,20 @@ export function LidarVisualizer() {
   const loadDemo = useCallback(async () => {
     setError(null);
     try {
+      const fetchAsset = (path: string) =>
+        fetch(path, { cache: "no-store" }).then((r) => {
+          if (!r.ok) {
+            throw new Error(
+              `Failed to load ${path} (${r.status}). If demo.bin is missing, run: npm run gen:kitti-demo`
+            );
+          }
+          return r;
+        });
+
       const [binBuf, calibText, labelText] = await Promise.all([
-        fetch(DEMO_BIN).then((r) => {
-          if (!r.ok) throw new Error(`Failed to load ${DEMO_BIN}`);
-          return r.arrayBuffer();
-        }),
-        fetch(DEMO_CALIB).then((r) => {
-          if (!r.ok) throw new Error(`Failed to load ${DEMO_CALIB}`);
-          return r.text();
-        }),
-        fetch(DEMO_LABELS).then((r) => {
-          if (!r.ok) throw new Error(`Failed to load ${DEMO_LABELS}`);
-          return r.text();
-        }),
+        fetchAsset(DEMO_BIN).then((r) => r.arrayBuffer()),
+        fetchAsset(DEMO_CALIB).then((r) => r.text()),
+        fetchAsset(DEMO_LABELS).then((r) => r.text()),
       ]);
       const raw = parseVelodyneBin(binBuf);
       setCloud(remapCloudToThreeFrame(raw));

@@ -17,7 +17,7 @@ Open [http://localhost:3000](http://localhost:3000). The bundled demo loads auto
 npm run gen:kitti-demo
 ```
 
-Writes `public/kitti-demo/` (synthetic points aligned with sample labels).
+Writes `public/kitti-demo/` (synthetic points aligned with sample labels). Run this if **Load bundled demo** fails with a missing `demo.bin` error (for example after an incomplete clone).
 
 ## Stack
 
