@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import { useThree } from "@react-three/fiber";
 import { OrbitControls, Grid } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
@@ -18,17 +18,28 @@ type Props = {
   calib: KittiCalib | null;
   labels: KittiLabel3D[];
   colorMode: ColorMode;
+  /** When this value changes, camera recenters on the cloud (scrubbing keeps it stable). */
+  refitKey: number;
 };
 
-export function LidarScene({ cloud, calib, labels, colorMode }: Props) {
+export function LidarScene({
+  cloud,
+  calib,
+  labels,
+  colorMode,
+  refitKey,
+}: Props) {
   const { center, radius } = useMemo(
     () => boundingSphereFromCloud(cloud),
     [cloud]
   );
   const { camera } = useThree();
   const ctrl = useRef<OrbitControlsImpl>(null);
+  const prevRefitKey = useRef<number | undefined>(undefined);
 
   useLayoutEffect(() => {
+    if (prevRefitKey.current === refitKey) return;
+    prevRefitKey.current = refitKey;
     const dist = Math.max(radius * 3.2, 14);
     if (camera instanceof THREE.PerspectiveCamera) {
       camera.position.set(
@@ -40,10 +51,6 @@ export function LidarScene({ cloud, calib, labels, colorMode }: Props) {
       camera.far = Math.max(600, dist * 30);
       camera.updateProjectionMatrix();
     }
-  }, [camera, center, radius]);
-
-  /** OrbitControls ref is set after the first layout pass; sync target on the next frame. */
-  useEffect(() => {
     const id = requestAnimationFrame(() => {
       const o = ctrl.current;
       if (!o) return;
@@ -51,7 +58,7 @@ export function LidarScene({ cloud, calib, labels, colorMode }: Props) {
       o.update();
     });
     return () => cancelAnimationFrame(id);
-  }, [center, radius]);
+  }, [refitKey, camera, center, radius]);
 
   return (
     <>
