@@ -57,6 +57,9 @@ export function LidarVisualizer() {
   const [cloud, setCloud] = useState<VelodyneCloud | null>(null);
   const [calib, setCalib] = useState<KittiCalib | null>(null);
   const [labels, setLabels] = useState<KittiLabel3D[]>([]);
+  /** Increment so LidarScene refits the camera (must be a real number — never omit). */
+  const [refitKey, setRefitKey] = useState(0);
+  const bumpRefit = useCallback(() => setRefitKey((k) => k + 1), []);
 
   const loadDemo = useCallback(async () => {
     setError(null);
@@ -80,13 +83,14 @@ export function LidarVisualizer() {
       setCloud(remapCloudToThreeFrame(raw));
       setCalib(parseKittiCalib(calibText));
       setLabels(parseKittiLabelText(labelText));
+      bumpRefit();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load demo");
       setCloud(null);
       setCalib(null);
       setLabels([]);
     }
-  }, []);
+  }, [bumpRefit]);
 
   useEffect(() => {
     void loadDemo();
@@ -99,6 +103,7 @@ export function LidarVisualizer() {
       const buf = await readFileAsArrayBuffer(file);
       const raw = parseVelodyneBin(buf);
       setCloud(remapCloudToThreeFrame(raw));
+      bumpRefit();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Invalid .bin");
       setCloud(null);
@@ -226,6 +231,7 @@ export function LidarVisualizer() {
             calib={calib}
             labels={labels}
             colorMode={colorMode}
+            refitKey={refitKey}
           />
         ) : (
           <div className="flex h-full items-center justify-center bg-[#0c0c0e] text-center text-sm text-slate-400">
