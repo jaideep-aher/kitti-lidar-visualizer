@@ -12,9 +12,10 @@ type Props = {
   calib: KittiCalib | null;
   labels: KittiLabel3D[];
   colorMode: ColorMode;
+  refitKey: number;
 };
 
-export function LidarCanvas({ cloud, calib, labels, colorMode }: Props) {
+export function LidarCanvas({ cloud, calib, labels, colorMode, refitKey }: Props) {
   return (
     <Canvas
       className="h-full w-full min-h-[420px] rounded-xl bg-[#0c0c0e]"
@@ -28,6 +29,7 @@ export function LidarCanvas({ cloud, calib, labels, colorMode }: Props) {
         calib={calib}
         labels={labels}
         colorMode={colorMode}
+        refitKey={refitKey}
       />
     </Canvas>
   );
